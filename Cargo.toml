@@ -1,0 +1,37 @@
+[package]
+name = "relbox"
+version = "0.1.0"
+description = "Db kernel for supporting storage"
+edition = "2021"
+
+[lib]
+name = "relbox"
+
+[[bench]]
+name = "tb_single_thread"
+harness = false
+
+[dev-dependencies]
+criterion = "0.5.1"
+rand = "0.8.5"
+serde = "1.0.203"
+serde_json = "1.0.117"
+tempfile = "3.10.1"
+tracing-test = "0.2.5"
+
+[dependencies]
+atomic-wait = "1.1"
+binary-layout = "4.0"
+crossbeam-channel = "0.5"
+crossbeam-queue = "0.3"
+dashmap = "5.5"
+daumtils = { git = "https://github.com/rdaum/daumtils.git" }
+hi_sparse_bitset = "0.6"
+human_bytes = "0.4"
+im = "15.1"
+io-uring = "0.6"
+libc = "0.2"
+okaywal = "0.3"
+strum = { version = "0.26", features = ["derive"] }
+thiserror = "1.0"
+tracing = "0.1"
