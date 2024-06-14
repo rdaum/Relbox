@@ -1,6 +1,6 @@
 [package]
 name = "relbox"
-version = "0.1.0"
+version = "0.2.0"
 description = "Db kernel for supporting storage"
 edition = "2021"
 
@@ -25,7 +25,7 @@ binary-layout = "4.0"
 crossbeam-channel = "0.5"
 crossbeam-queue = "0.3"
 dashmap = "5.5"
-daumtils = { git = "https://github.com/rdaum/daumtils.git" }
+daumtils = { git = "https://github.com/rdaum/daumtils.git", version = "0.2.0" }
 hi_sparse_bitset = "0.6"
 human_bytes = "0.4"
 im = "15.1"
