@@ -33,5 +33,5 @@ io-uring = "0.6"
 libc = "0.2"
 okaywal = "0.3"
 strum = { version = "0.26", features = ["derive"] }
-thiserror = "1.0"
+thiserror = "2.0"
 tracing = "0.1"
