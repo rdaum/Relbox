@@ -50,7 +50,7 @@ binary_layout!(sequence, LittleEndian, {
     // The sequence id.
     id: u64,
     // The current value of the sequence.
-    value: u64,
+    value: i64,
 });
 
 const SEQUENCE_PAGE_ID: PageId = 0xfafe_babf;
@@ -59,7 +59,7 @@ impl ColdStorage {
     pub fn start(
         path: PathBuf,
         relations: &mut [BaseRelation],
-        sequences: &mut [u64],
+        sequences: &mut [i64],
         tuple_box: Arc<TupleBox>,
     ) -> BackingStoreClient {
         let page_storage = PageStore::new(path.join("pages"));
@@ -196,7 +196,7 @@ impl ColdStorage {
         tuple_box: Arc<TupleBox>,
         ts: u64,
         ws: WorkingSet,
-        sequences: Vec<u64>,
+        sequences: Vec<i64>,
     ) {
         debug!("Committing write-ahead for ts {}", ts);
 

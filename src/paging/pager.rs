@@ -66,7 +66,7 @@ impl Pager {
         &self,
         path: PathBuf,
         relations: &mut [BaseRelation],
-        sequences: &mut [u64],
+        sequences: &mut [i64],
         tuple_box: Arc<TupleBox>,
     ) -> Result<(), BufferPoolError> {
         let mut cs = self.cold_storage.lock().unwrap();
@@ -144,7 +144,7 @@ impl Pager {
     }
 
     /// Sync the working set to cold storage (if any)
-    pub fn sync(&self, ts: u64, ws: WorkingSet, sequences: Vec<u64>) {
+    pub fn sync(&self, ts: u64, ws: WorkingSet, sequences: Vec<i64>) {
         let cs = self.cold_storage.lock().unwrap();
         if let Some(cold_storage) = cs.as_ref() {
             cold_storage.sync(ts, ws, sequences);

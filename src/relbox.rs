@@ -24,7 +24,7 @@ use crate::tx::{CommitError, CommitSet, Transaction};
 use crate::RelationId;
 use std::fmt::Debug;
 use std::path::PathBuf;
-use std::sync::atomic::AtomicU64;
+use std::sync::atomic::{AtomicI64, AtomicU64};
 use std::sync::{Arc, RwLock};
 
 use super::paging::Pager;
@@ -59,7 +59,7 @@ pub struct RelBox {
     maximum_transaction: AtomicU64,
 
     /// Monotonically incrementing sequence counters.
-    sequences: Vec<AtomicU64>,
+    sequences: Vec<AtomicI64>,
 
     /// The copy-on-write set of current canonical base relations.
     /// Held in ArcSwap so that we can swap them out atomically for their modified versions, without holding
@@ -98,7 +98,7 @@ impl RelBox {
         for (rid, r) in relations.iter().enumerate() {
             base_relations.push(BaseRelation::new(RelationId(rid), r.clone(), 0));
         }
-        let mut sequences = vec![0; num_sequences];
+        let mut sequences = vec![-1; num_sequences];
 
         // Open the pager to the provided path, and restore the relations and sequences from it.
         // (If there's no path, this is a no-op and the database will be transient and empty).
@@ -109,7 +109,7 @@ impl RelBox {
         }
         let sequences = sequences
             .into_iter()
-            .map(AtomicU64::new)
+            .map(AtomicI64::new)
             .collect::<Vec<_>>();
 
         Arc::new(Self {
@@ -140,18 +140,18 @@ impl RelBox {
     }
 
     /// Increment this sequence and return its previous value.
-    pub fn increment_sequence(self: Arc<Self>, sequence_number: usize) -> u64 {
+    pub fn increment_sequence(self: Arc<Self>, sequence_number: usize) -> i64 {
         let sequence = &self.sequences[sequence_number];
         sequence.fetch_add(1, std::sync::atomic::Ordering::SeqCst)
     }
 
     /// Get the current value for the given sequence.
-    pub fn sequence_current(self: Arc<Self>, sequence_number: usize) -> u64 {
+    pub fn sequence_current(self: Arc<Self>, sequence_number: usize) -> i64 {
         self.sequences[sequence_number].load(std::sync::atomic::Ordering::SeqCst)
     }
 
     /// Update the given sequence to `value` iff `value` is greater than the current value.
-    pub fn update_sequence_max(self: Arc<Self>, sequence_number: usize, value: u64) {
+    pub fn update_sequence_max(self: Arc<Self>, sequence_number: usize, value: i64) {
         let sequence = &self.sequences[sequence_number];
         loop {
             let current = sequence.load(std::sync::atomic::Ordering::SeqCst);

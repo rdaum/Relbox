@@ -27,7 +27,7 @@ pub struct BackingStoreClient {
 }
 
 pub enum WriterMessage {
-    Commit(u64, WorkingSet, Vec<u64>),
+    Commit(u64, WorkingSet, Vec<i64>),
     Shutdown,
 }
 
@@ -42,7 +42,7 @@ impl BackingStoreClient {
     /// Sync out the working set from a committed transaction for the given transaction timestamp.
     /// Used to support persistent storage of committed transactions, effectively as a write-ahead
     /// log.
-    pub fn sync(&self, ts: u64, ws: WorkingSet, sequences: Vec<u64>) {
+    pub fn sync(&self, ts: u64, ws: WorkingSet, sequences: Vec<i64>) {
         self.sender
             .send(WriterMessage::Commit(ts, ws, sequences))
             .expect("Unable to send write-ahead sync message");

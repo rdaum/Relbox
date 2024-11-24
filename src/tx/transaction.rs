@@ -71,14 +71,14 @@ impl Transaction {
         }
     }
 
-    pub fn increment_sequence(&self, sequence_number: usize) -> u64 {
+    pub fn increment_sequence(&self, sequence_number: usize) -> i64 {
         self.db.clone().increment_sequence(sequence_number)
     }
 
-    pub fn sequence_current(&self, sequence_number: usize) -> u64 {
+    pub fn sequence_current(&self, sequence_number: usize) -> i64 {
         self.db.clone().sequence_current(sequence_number)
     }
-    pub fn update_sequence_max(&self, sequence_number: usize, value: u64) {
+    pub fn update_sequence_max(&self, sequence_number: usize, value: i64) {
         self.db.clone().update_sequence_max(sequence_number, value)
     }
     pub fn commit(&self) -> Result<(), CommitError> {
